@@ -10,7 +10,7 @@
 
 extension UIImage {
     
-    func hasAlpha() -> Bool {
+    public func hasAlpha() -> Bool {
         let alpha: CGImageAlphaInfo = CGImageGetAlphaInfo(self.CGImage)
         return
             alpha == CGImageAlphaInfo.First ||
