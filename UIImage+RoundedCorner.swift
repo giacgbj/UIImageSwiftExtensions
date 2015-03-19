@@ -8,7 +8,7 @@
 //  No warranty is expressed or implied.
 //
 
-extension UIImage {
+public extension UIImage {
     
     // Creates a copy of this image with rounded corners
     // If borderSize is non-zero, a transparent border of the given size will also be added

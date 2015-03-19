@@ -8,7 +8,7 @@
 //  No warranty is expressed or implied.
 //
 
-extension UIImage {
+public extension UIImage {
     
     public func hasAlpha() -> Bool {
         let alpha: CGImageAlphaInfo = CGImageGetAlphaInfo(self.CGImage)

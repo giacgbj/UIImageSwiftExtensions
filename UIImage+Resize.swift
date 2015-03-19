@@ -8,7 +8,7 @@
 //  No warranty is expressed or implied.
 //
 
-extension UIImage {
+public extension UIImage {
     
     // Returns a copy of this image that is cropped to the given bounds.
     // The bounds will be adjusted using CGRectIntegral.
