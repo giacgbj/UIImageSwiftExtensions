@@ -8,6 +8,8 @@
 //  No warranty is expressed or implied.
 //
 
+import Foundation
+
 public extension UIImage {
     
     // Creates a copy of this image with rounded corners

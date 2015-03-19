@@ -8,6 +8,8 @@
 //  No warranty is expressed or implied.
 //
 
+import Foundation
+
 public extension UIImage {
     
     // Returns a copy of this image that is cropped to the given bounds.
