@@ -13,7 +13,7 @@ extension UIImage {
     // Returns a copy of this image that is cropped to the given bounds.
     // The bounds will be adjusted using CGRectIntegral.
     // This method ignores the image's imageOrientation setting.
-    func croppedImage(bounds: CGRect) -> UIImage {
+    public func croppedImage(bounds: CGRect) -> UIImage {
         let imageRef: CGImageRef = CGImageCreateWithImageInRect(self.CGImage, bounds)
         return UIImage(CGImage: imageRef)!
     }
