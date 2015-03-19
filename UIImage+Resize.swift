@@ -18,7 +18,7 @@ extension UIImage {
         return UIImage(CGImage: imageRef)!
     }
     
-    func thumbnailImage(thumbnailSize: Int, transparentBorder borderSize:Int, cornerRadius:Int, interpolationQuality quality:CGInterpolationQuality) -> UIImage {
+    public func thumbnailImage(thumbnailSize: Int, transparentBorder borderSize:Int, cornerRadius:Int, interpolationQuality quality:CGInterpolationQuality) -> UIImage {
         var resizedImage = self.resizedImageWithContentMode(.ScaleAspectFill, bounds: CGSizeMake(CGFloat(thumbnailSize), CGFloat(thumbnailSize)), interpolationQuality: quality)
  
         // Crop out any part of the image that's larger than the thumbnail size
@@ -39,7 +39,7 @@ extension UIImage {
     
     // Returns a rescaled copy of the image, taking into account its orientation
     // The image will be scaled disproportionately if necessary to fit the bounds specified by the parameter
-    func resizedImage(newSize: CGSize, interpolationQuality quality: CGInterpolationQuality) -> UIImage {
+    public func resizedImage(newSize: CGSize, interpolationQuality quality: CGInterpolationQuality) -> UIImage {
         var drawTransposed: Bool
         
         switch(self.imageOrientation) {
@@ -57,7 +57,7 @@ extension UIImage {
         )
     }
     
-    func resizedImageWithContentMode(contentMode: UIViewContentMode, bounds: CGSize, interpolationQuality quality: CGInterpolationQuality) -> UIImage {
+    public func resizedImageWithContentMode(contentMode: UIViewContentMode, bounds: CGSize, interpolationQuality quality: CGInterpolationQuality) -> UIImage {
         let horizontalRatio = bounds.width / self.size.width
         let verticalRatio = bounds.height / self.size.height
         var ratio: CGFloat = 1

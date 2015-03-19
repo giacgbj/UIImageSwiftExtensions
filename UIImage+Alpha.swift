@@ -19,7 +19,7 @@ extension UIImage {
             alpha == CGImageAlphaInfo.PremultipliedLast
     }
     
-    func imageWithAlpha() -> UIImage {
+    public func imageWithAlpha() -> UIImage {
         if self.hasAlpha() {
             return self
         }
@@ -42,7 +42,7 @@ extension UIImage {
         return UIImage(CGImage: imageRefWithAlpha)!
     }
     
-    func transparentBorderImage(borderSize: Int) -> UIImage {
+    public func transparentBorderImage(borderSize: Int) -> UIImage {
         let image = self.imageWithAlpha()
         
         let newRect = CGRectMake(
