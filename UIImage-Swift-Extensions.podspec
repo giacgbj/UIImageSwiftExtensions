@@ -1,6 +1,6 @@
 
 Pod::Spec.new do |s|
-  s.name             = "UIImageSwiftExtensions"
+  s.name             = "UIImage-Swift-Extensions"
   s.version          = "1.0"
   s.summary          = "A Swift port of Trevor Harmon UIImage's extensions (http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/)"
   s.description      = <<-DESC
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/jhack'
 
   s.platform     = :ios, '8.0'
-
+  
   s.requires_arc = true
 
   s.source_files = '*.swift'
