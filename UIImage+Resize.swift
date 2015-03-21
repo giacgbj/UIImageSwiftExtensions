@@ -75,6 +75,24 @@ public extension UIImage {
         return self.resizedImage(newSize, interpolationQuality: quality)
     }
     
+    private func normalizeBitmapInfo(bI: CGBitmapInfo) -> CGBitmapInfo {
+        var alphaInfo: CGBitmapInfo = bI & CGBitmapInfo.AlphaInfoMask
+        
+        if alphaInfo == CGBitmapInfo(CGImageAlphaInfo.Last.rawValue) {
+            alphaInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedLast.rawValue)
+        }
+
+        if alphaInfo == CGBitmapInfo(CGImageAlphaInfo.First.rawValue) {
+            alphaInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
+        }
+
+        var newBI: CGBitmapInfo = bI & ~CGBitmapInfo.AlphaInfoMask;
+
+        newBI |= alphaInfo;
+
+        return newBI
+    }
+    
     private func resizedImage(newSize: CGSize, transform: CGAffineTransform, drawTransposed transpose: Bool, interpolationQuality quality: CGInterpolationQuality) -> UIImage {
         let newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height))
         let transposedRect = CGRectMake(0, 0, newRect.size.height, newRect.size.width)
@@ -88,7 +106,7 @@ public extension UIImage {
             CGImageGetBitsPerComponent(imageRef),
             0,
             CGImageGetColorSpace(imageRef),
-            CGImageGetBitmapInfo(imageRef)
+            normalizeBitmapInfo(CGImageGetBitmapInfo(imageRef))
         )
 
         // Rotate and/or flip the image if required by its orientation
