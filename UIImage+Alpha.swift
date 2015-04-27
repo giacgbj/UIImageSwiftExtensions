@@ -54,7 +54,7 @@ public extension UIImage {
         // Build a context that's the same dimensions as the new size
         let bitmap: CGContextRef = CGBitmapContextCreate(
             nil,
-            UInt(newRect.size.width), UInt(newRect.size.height),
+            Int(newRect.size.width), Int(newRect.size.height),
             CGImageGetBitsPerComponent(self.CGImage),
             0,
             CGImageGetColorSpace(self.CGImage),
@@ -78,7 +78,7 @@ public extension UIImage {
         // Build a context that's the same dimensions as the new size
         let maskContext: CGContextRef = CGBitmapContextCreate(
             nil,
-            UInt(size.width), UInt(size.height),
+            Int(size.width), Int(size.height),
             8, // 8-bit grayscale
             0,
             colorSpace,

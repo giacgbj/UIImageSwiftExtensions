@@ -21,8 +21,8 @@ public extension UIImage {
         // Build a context that's the same dimensions as the new size
         let context: CGContextRef = CGBitmapContextCreate(
             nil,
-            UInt(image.size.width),
-            UInt(image.size.height),
+            Int(image.size.width),
+            Int(image.size.height),
             CGImageGetBitsPerComponent(image.CGImage),
             0,
             CGImageGetColorSpace(image.CGImage),
