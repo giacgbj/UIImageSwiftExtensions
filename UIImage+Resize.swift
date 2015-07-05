@@ -2,11 +2,13 @@
 //  UIImage+Resize.swift
 //
 //  Created by Trevor Harmon on 08/05/09.
-//  Swift port by Giacomo Boccardo on 03/18/15.
+//  Swift port by Giacomo Boccardo on 07/05/2015.
 //
 //  Free for personal or commercial use, with or without modification
 //  No warranty is expressed or implied.
 //
+
+import UIKit
 
 public extension UIImage {
     
@@ -14,12 +16,12 @@ public extension UIImage {
     // The bounds will be adjusted using CGRectIntegral.
     // This method ignores the image's imageOrientation setting.
     public func croppedImage(bounds: CGRect) -> UIImage {
-        let imageRef: CGImageRef = CGImageCreateWithImageInRect(self.CGImage, bounds)
-        return UIImage(CGImage: imageRef)!
+        let imageRef: CGImageRef = CGImageCreateWithImageInRect(self.CGImage, bounds)!
+        return UIImage(CGImage: imageRef)
     }
     
     public func thumbnailImage(thumbnailSize: Int, transparentBorder borderSize:Int, cornerRadius:Int, interpolationQuality quality:CGInterpolationQuality) -> UIImage {
-        var resizedImage = self.resizedImageWithContentMode(.ScaleAspectFill, bounds: CGSizeMake(CGFloat(thumbnailSize), CGFloat(thumbnailSize)), interpolationQuality: quality)
+        let resizedImage = self.resizedImageWithContentMode(.ScaleAspectFill, bounds: CGSizeMake(CGFloat(thumbnailSize), CGFloat(thumbnailSize)), interpolationQuality: quality)
  
         // Crop out any part of the image that's larger than the thumbnail size
         // The cropped rect must be centered on the resized image
@@ -75,18 +77,18 @@ public extension UIImage {
         return self.resizedImage(newSize, interpolationQuality: quality)
     }
     
-    private func normalizeBitmapInfo(bI: CGBitmapInfo) -> CGBitmapInfo {
-        var alphaInfo: CGBitmapInfo = bI & CGBitmapInfo.AlphaInfoMask
+    private func normalizeBitmapInfo(bI: CGBitmapInfo) -> UInt32 {
+        var alphaInfo: UInt32 = bI.rawValue & CGBitmapInfo.AlphaInfoMask.rawValue
         
-        if alphaInfo == CGBitmapInfo(CGImageAlphaInfo.Last.rawValue) {
-            alphaInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedLast.rawValue)
+        if alphaInfo == CGImageAlphaInfo.Last.rawValue {
+            alphaInfo =  CGImageAlphaInfo.PremultipliedLast.rawValue
         }
 
-        if alphaInfo == CGBitmapInfo(CGImageAlphaInfo.First.rawValue) {
-            alphaInfo = CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
+        if alphaInfo == CGImageAlphaInfo.First.rawValue {
+            alphaInfo = CGImageAlphaInfo.PremultipliedFirst.rawValue
         }
 
-        var newBI: CGBitmapInfo = bI & ~CGBitmapInfo.AlphaInfoMask;
+        var newBI: UInt32 = bI.rawValue & ~CGBitmapInfo.AlphaInfoMask.rawValue;
 
         newBI |= alphaInfo;
 
@@ -96,7 +98,7 @@ public extension UIImage {
     private func resizedImage(newSize: CGSize, transform: CGAffineTransform, drawTransposed transpose: Bool, interpolationQuality quality: CGInterpolationQuality) -> UIImage {
         let newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height))
         let transposedRect = CGRectMake(0, 0, newRect.size.height, newRect.size.width)
-        let imageRef: CGImageRef = self.CGImage
+        let imageRef: CGImageRef = self.CGImage!
 
         // Build a context that's the same dimensions as the new size
         let bitmap: CGContextRef = CGBitmapContextCreate(
@@ -107,7 +109,7 @@ public extension UIImage {
             0,
             CGImageGetColorSpace(imageRef),
             normalizeBitmapInfo(CGImageGetBitmapInfo(imageRef))
-        )
+        )!
 
         // Rotate and/or flip the image if required by its orientation
         CGContextConcatCTM(bitmap, transform)
@@ -119,8 +121,8 @@ public extension UIImage {
         CGContextDrawImage(bitmap, transpose ? transposedRect: newRect, imageRef)
 
         // Get the resized image from the context and a UIImage
-        let newImageRef: CGImageRef = CGBitmapContextCreateImage(bitmap)
-        return UIImage(CGImage: newImageRef)!
+        let newImageRef: CGImageRef = CGBitmapContextCreateImage(bitmap)!
+        return UIImage(CGImage: newImageRef)
     }
     
     private func transformForOrientation(newSize: CGSize) -> CGAffineTransform {

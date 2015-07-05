@@ -2,11 +2,13 @@
 //  UIImage+Alpha.swift
 //
 //  Created by Trevor Harmon on 09/20/09.
-//  Swift port by Giacomo Boccardo on 03/18/15.
+//  Swift port by Giacomo Boccardo on 07/05/2015.
 //
 //  Free for personal or commercial use, with or without modification
 //  No warranty is expressed or implied.
 //
+
+import UIKit
 
 public extension UIImage {
     
@@ -24,7 +26,7 @@ public extension UIImage {
             return self
         }
         
-        let imageRef:CGImageRef = self.CGImage
+        let imageRef:CGImageRef = self.CGImage!
         let width  = CGImageGetWidth(imageRef)
         let height = CGImageGetHeight(imageRef)
 
@@ -32,14 +34,14 @@ public extension UIImage {
         let offscreenContext: CGContextRef = CGBitmapContextCreate(
             nil, width, height, 8, 0,
             CGImageGetColorSpace(imageRef),
-            CGBitmapInfo.ByteOrderDefault | CGBitmapInfo(CGImageAlphaInfo.PremultipliedFirst.rawValue)
-        )
+            CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.PremultipliedFirst.rawValue
+        )!
         
         // Draw the image into the context and retrieve the new image, which will now have an alpha layer
         CGContextDrawImage(offscreenContext, CGRectMake(0, 0, CGFloat(width), CGFloat(height)), imageRef)
-        let imageRefWithAlpha:CGImageRef = CGBitmapContextCreateImage(offscreenContext)
+        let imageRefWithAlpha:CGImageRef = CGBitmapContextCreateImage(offscreenContext)!
         
-        return UIImage(CGImage: imageRefWithAlpha)!
+        return UIImage(CGImage: imageRefWithAlpha)
     }
     
     public func transparentBorderImage(borderSize: Int) -> UIImage {
@@ -50,6 +52,7 @@ public extension UIImage {
             image.size.width + CGFloat(borderSize) * 2,
             image.size.height + CGFloat(borderSize) * 2
         )
+    
         
         // Build a context that's the same dimensions as the new size
         let bitmap: CGContextRef = CGBitmapContextCreate(
@@ -58,22 +61,22 @@ public extension UIImage {
             CGImageGetBitsPerComponent(self.CGImage),
             0,
             CGImageGetColorSpace(self.CGImage),
-            CGImageGetBitmapInfo(self.CGImage)
-        )
+            CGImageGetBitmapInfo(self.CGImage).rawValue
+        )!
         
         // Draw the image in the center of the context, leaving a gap around the edges
         let imageLocation = CGRectMake(CGFloat(borderSize), CGFloat(borderSize), image.size.width, image.size.height)
         CGContextDrawImage(bitmap, imageLocation, self.CGImage)
-        let borderImageRef: CGImageRef = CGBitmapContextCreateImage(bitmap)
+        let borderImageRef: CGImageRef = CGBitmapContextCreateImage(bitmap)!
         
         // Create a mask to make the border transparent, and combine it with the image
         let maskImageRef: CGImageRef = self.newBorderMask(borderSize, size: newRect.size)
-        let transparentBorderImageRef: CGImageRef = CGImageCreateWithMask(borderImageRef, maskImageRef)
-        return UIImage(CGImage:transparentBorderImageRef)!
+        let transparentBorderImageRef: CGImageRef = CGImageCreateWithMask(borderImageRef, maskImageRef)!
+        return UIImage(CGImage:transparentBorderImageRef)
     }
     
     private func newBorderMask(borderSize: Int, size: CGSize) -> CGImageRef {
-        let colorSpace: CGColorSpaceRef = CGColorSpaceCreateDeviceGray()
+        let colorSpace: CGColorSpaceRef = CGColorSpaceCreateDeviceGray()!
         
         // Build a context that's the same dimensions as the new size
         let maskContext: CGContextRef = CGBitmapContextCreate(
@@ -82,8 +85,8 @@ public extension UIImage {
             8, // 8-bit grayscale
             0,
             colorSpace,
-            CGBitmapInfo.ByteOrderDefault | CGBitmapInfo(CGImageAlphaInfo.None.rawValue)
-        )
+            CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.None.rawValue
+        )!
         
         // Start with a mask that's entirely transparent
         CGContextSetFillColorWithColor(maskContext, UIColor.blackColor().CGColor)
@@ -99,6 +102,6 @@ public extension UIImage {
         )
         
         // Get an image of the context
-        return CGBitmapContextCreateImage(maskContext)
+        return CGBitmapContextCreateImage(maskContext)!
     }
 }

@@ -2,18 +2,20 @@
 //  UIImage+RoundedCorner.swift
 //
 //  Created by Trevor Harmon on 09/20/09.
-//  Swift port by Giacomo Boccardo on 03/18/15.
+//  Swift port by Giacomo Boccardo on 07/05/2015.
 //
 //  Free for personal or commercial use, with or without modification
 //  No warranty is expressed or implied.
 //
+
+import UIKit
 
 public extension UIImage {
     
     // Creates a copy of this image with rounded corners
     // If borderSize is non-zero, a transparent border of the given size will also be added
     // Original author: Björn Sållarp. Used with permission. See: http://blog.sallarp.com/iphone-uiimage-round-corners/
-    public func roundedCornerImage(#cornerSize:Int, borderSize:Int) -> UIImage
+    public func roundedCornerImage(cornerSize cornerSize:Int, borderSize:Int) -> UIImage
     {
         // If the image does not have an alpha layer, add one
         let image = self.imageWithAlpha()
@@ -26,8 +28,8 @@ public extension UIImage {
             CGImageGetBitsPerComponent(image.CGImage),
             0,
             CGImageGetColorSpace(image.CGImage),
-            CGImageGetBitmapInfo(image.CGImage)
-        )
+            CGImageGetBitmapInfo(image.CGImage).rawValue
+        )!
         
         // Create a clipping path with rounded corners
         CGContextBeginPath(context)
@@ -50,10 +52,10 @@ public extension UIImage {
             image.CGImage)
         
         // Create a CGImage from the context
-        let clippedImage: CGImageRef = CGBitmapContextCreateImage(context)
+        let clippedImage: CGImageRef = CGBitmapContextCreateImage(context)!
         
         // Create a UIImage from the CGImage
-        return UIImage(CGImage: clippedImage)!
+        return UIImage(CGImage: clippedImage)
     }
     
     // Adds a rectangular path to the given context and rounds its corners by the given extents
