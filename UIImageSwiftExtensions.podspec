@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.version          = "2.0"
   s.summary          = "A Swift 2 port of Trevor Harmon UIImage's extensions (http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/)"
   s.description      = <<-DESC
-                       A Swift 2 port of Trevor Harmon UIImage's extensions (see: http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/)
+                       A Swift 2 port of Trevor Harmon UIImage's extensions (see: http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/).
                        DESC
   s.homepage         = "https://github.com/giacgbj/UIImageSwiftExtensions"
 

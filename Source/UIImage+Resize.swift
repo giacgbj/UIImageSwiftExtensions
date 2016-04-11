@@ -2,12 +2,11 @@
 //  UIImage+Resize.swift
 //
 //  Created by Trevor Harmon on 08/05/09.
-//  Swift port by Giacomo Boccardo on 07/05/2015.
+//  Swift 2 port by Giacomo Boccardo on 04/12/2016.
 //
 //  Free for personal or commercial use, with or without modification
 //  No warranty is expressed or implied.
 //
-
 import UIKit
 
 public extension UIImage {
