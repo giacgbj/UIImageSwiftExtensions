@@ -33,7 +33,7 @@ public extension UIImage {
         let offscreenContext: CGContext = CGContext(
             data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
             space: imageRef.colorSpace!,
-            bitmapInfo: CGImageByteOrderInfo.orderMask.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
+            bitmapInfo: 0 /*CGImageByteOrderInfo.orderMask.rawValue*/ | CGImageAlphaInfo.premultipliedFirst.rawValue
         )!
         
         // Draw the image into the context and retrieve the new image, which will now have an alpha layer
