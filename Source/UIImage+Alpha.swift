@@ -2,7 +2,7 @@
 //  UIImage+Alpha.swift
 //
 //  Created by Trevor Harmon on 09/20/09.
-//  Swift 2 port by Giacomo Boccardo on 04/12/2016.
+//  Swift 3 port by Giacomo Boccardo on 09/15/2016.
 //
 //  Free for personal or commercial use, with or without modification
 //  No warranty is expressed or implied.
@@ -12,12 +12,12 @@ import UIKit
 public extension UIImage {
     
     public func hasAlpha() -> Bool {
-        let alpha: CGImageAlphaInfo = CGImageGetAlphaInfo(self.CGImage)
+        let alpha: CGImageAlphaInfo = (self.cgImage)!.alphaInfo
         return
-            alpha == CGImageAlphaInfo.First ||
-            alpha == CGImageAlphaInfo.Last ||
-            alpha == CGImageAlphaInfo.PremultipliedFirst ||
-            alpha == CGImageAlphaInfo.PremultipliedLast
+            alpha == CGImageAlphaInfo.first ||
+            alpha == CGImageAlphaInfo.last ||
+            alpha == CGImageAlphaInfo.premultipliedFirst ||
+            alpha == CGImageAlphaInfo.premultipliedLast
     }
     
     public func imageWithAlpha() -> UIImage {
@@ -25,82 +25,82 @@ public extension UIImage {
             return self
         }
         
-        let imageRef:CGImageRef = self.CGImage!
-        let width  = CGImageGetWidth(imageRef)
-        let height = CGImageGetHeight(imageRef)
+        let imageRef:CGImage = self.cgImage!
+        let width  = imageRef.width
+        let height = imageRef.height
 
         // The bitsPerComponent and bitmapInfo values are hard-coded to prevent an "unsupported parameter combination" error
-        let offscreenContext: CGContextRef = CGBitmapContextCreate(
-            nil, width, height, 8, 0,
-            CGImageGetColorSpace(imageRef),
-            CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.PremultipliedFirst.rawValue
+        let offscreenContext: CGContext = CGContext(
+            data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: 0,
+            space: imageRef.colorSpace!,
+            bitmapInfo: CGImageByteOrderInfo.orderMask.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
         )!
         
         // Draw the image into the context and retrieve the new image, which will now have an alpha layer
-        CGContextDrawImage(offscreenContext, CGRectMake(0, 0, CGFloat(width), CGFloat(height)), imageRef)
-        let imageRefWithAlpha:CGImageRef = CGBitmapContextCreateImage(offscreenContext)!
+        offscreenContext.draw(imageRef, in: CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height)))
+        let imageRefWithAlpha:CGImage = offscreenContext.makeImage()!
         
-        return UIImage(CGImage: imageRefWithAlpha)
+        return UIImage(cgImage: imageRefWithAlpha)
     }
     
-    public func transparentBorderImage(borderSize: Int) -> UIImage {
+    public func transparentBorderImage(_ borderSize: Int) -> UIImage {
         let image = self.imageWithAlpha()
         
-        let newRect = CGRectMake(
-            0, 0,
-            image.size.width + CGFloat(borderSize) * 2,
-            image.size.height + CGFloat(borderSize) * 2
+        let newRect = CGRect(
+            x: 0, y: 0,
+            width: image.size.width + CGFloat(borderSize) * 2,
+            height: image.size.height + CGFloat(borderSize) * 2
         )
     
         
         // Build a context that's the same dimensions as the new size
-        let bitmap: CGContextRef = CGBitmapContextCreate(
-            nil,
-            Int(newRect.size.width), Int(newRect.size.height),
-            CGImageGetBitsPerComponent(self.CGImage),
-            0,
-            CGImageGetColorSpace(self.CGImage),
-            CGImageGetBitmapInfo(self.CGImage).rawValue
+        let bitmap: CGContext = CGContext(
+            data: nil,
+            width: Int(newRect.size.width), height: Int(newRect.size.height),
+            bitsPerComponent: (self.cgImage)!.bitsPerComponent,
+            bytesPerRow: 0,
+            space: (self.cgImage)!.colorSpace!,
+            bitmapInfo: (self.cgImage)!.bitmapInfo.rawValue
         )!
         
         // Draw the image in the center of the context, leaving a gap around the edges
-        let imageLocation = CGRectMake(CGFloat(borderSize), CGFloat(borderSize), image.size.width, image.size.height)
-        CGContextDrawImage(bitmap, imageLocation, self.CGImage)
-        let borderImageRef: CGImageRef = CGBitmapContextCreateImage(bitmap)!
+        let imageLocation = CGRect(x: CGFloat(borderSize), y: CGFloat(borderSize), width: image.size.width, height: image.size.height)
+        bitmap.draw(self.cgImage!, in: imageLocation)
+        let borderImageRef: CGImage = bitmap.makeImage()!
         
         // Create a mask to make the border transparent, and combine it with the image
-        let maskImageRef: CGImageRef = self.newBorderMask(borderSize, size: newRect.size)
-        let transparentBorderImageRef: CGImageRef = CGImageCreateWithMask(borderImageRef, maskImageRef)!
-        return UIImage(CGImage:transparentBorderImageRef)
+        let maskImageRef: CGImage = self.newBorderMask(borderSize, size: newRect.size)
+        let transparentBorderImageRef: CGImage = borderImageRef.masking(maskImageRef)!
+        return UIImage(cgImage:transparentBorderImageRef)
     }
     
-    private func newBorderMask(borderSize: Int, size: CGSize) -> CGImageRef {
-        let colorSpace: CGColorSpaceRef = CGColorSpaceCreateDeviceGray()!
+    fileprivate func newBorderMask(_ borderSize: Int, size: CGSize) -> CGImage {
+        let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceGray()
         
         // Build a context that's the same dimensions as the new size
-        let maskContext: CGContextRef = CGBitmapContextCreate(
-            nil,
-            Int(size.width), Int(size.height),
-            8, // 8-bit grayscale
-            0,
-            colorSpace,
-            CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.None.rawValue
+        let maskContext: CGContext = CGContext(
+            data: nil,
+            width: Int(size.width), height: Int(size.height),
+            bitsPerComponent: 8, // 8-bit grayscale
+            bytesPerRow: 0,
+            space: colorSpace,
+            bitmapInfo: CGBitmapInfo().rawValue | CGImageAlphaInfo.none.rawValue
         )!
         
         // Start with a mask that's entirely transparent
-        CGContextSetFillColorWithColor(maskContext, UIColor.blackColor().CGColor)
-        CGContextFillRect(maskContext, CGRectMake(0, 0, size.width, size.height))
+        maskContext.setFillColor(UIColor.black.cgColor)
+        maskContext.fill(CGRect(x: 0, y: 0, width: size.width, height: size.height))
         
         // Make the inner part (within the border) opaque
-        CGContextSetFillColorWithColor(maskContext, UIColor.whiteColor().CGColor)
-        CGContextFillRect(maskContext, CGRectMake(
-            CGFloat(borderSize),
-            CGFloat(borderSize),
-            size.width - CGFloat(borderSize) * 2,
-            size.height - CGFloat(borderSize) * 2)
+        maskContext.setFillColor(UIColor.white.cgColor)
+        maskContext.fill(CGRect(
+            x: CGFloat(borderSize),
+            y: CGFloat(borderSize),
+            width: size.width - CGFloat(borderSize) * 2,
+            height: size.height - CGFloat(borderSize) * 2)
         )
         
         // Get an image of the context
-        return CGBitmapContextCreateImage(maskContext)!
+        return maskContext.makeImage()!
     }
 }
