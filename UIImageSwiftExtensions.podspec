@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "UIImageSwiftExtensions"
-  s.version          = "3.0"
+  s.version          = "3.1"
   s.summary          = "A Swift 3 port of Trevor Harmon UIImage's extensions (http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/)"
   s.description      = <<-DESC
                        A Swift 3 port of Trevor Harmon UIImage's extensions (see: http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/).

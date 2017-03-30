@@ -131,15 +131,15 @@ public extension UIImage {
             case .down, .downMirrored:
                 // EXIF = 3 / 4
                 transform = transform.translatedBy(x: newSize.width, y: newSize.height)
-                transform = transform.rotated(by: CGFloat(M_PI))
+                transform = transform.rotated(by: .pi)
             case .left, .leftMirrored:
                 // EXIF = 6 / 5
                 transform = transform.translatedBy(x: newSize.width, y: 0)
-                transform = transform.rotated(by: CGFloat(M_PI_2))
+                transform = transform.rotated(by: .pi / 2)
             case .right, .rightMirrored:
                 // EXIF = 8 / 7
                 transform = transform.translatedBy(x: 0, y: newSize.height)
-                transform = transform.rotated(by: -CGFloat(M_PI_2))
+                transform = transform.rotated(by: -.pi / 2)
             default:
                 break
         }
